@@ -1,4 +1,9 @@
 <?php
+    include "html_header.php";
+?>
+    <a href="add_user_form.php"><-- Wstecz</a> <br><br>
+
+<?php
 /**
  * Created by PhpStorm.
  * User: Michał Kazula
@@ -17,20 +22,23 @@ if (isset($_POST['login'])) {
     $surname = $_POST['surname'];
     $login = $_POST['login'];
     $pass = $_POST['pass'];
-    $sql = 'INSERT INTO '.$table.' values(null, "'.$name.'", "'.$surname.'", "'.$login.'", "'.$pass.'")';
-    $result = mysql_query($sql) or die(mysql_error());
+
+    $sql = 'SELECT COUNT(`login`) FROM '.$table.' WHERE "login" = "'.$login.'"';
+    $result = mysql_query($sql);
+
+    if (mysql_fetch_array($result, MYSQL_ASSOC)['login']) {
+//        mysql_close($handleSDB);
+//        die("W bazie już istnieje użytkownik o podanym loginie!");
+//        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        echo  '<h4 class="text-warning">W bazie już istnieje użytkownik o podanym loginie!</h4>';
+    } else {
+        $sql = 'INSERT INTO '.$table.' values(null, "'.$name.'", "'.$surname.'", "'.$login.'", "'.$pass.'")';
+        $result = mysql_query($sql) or die(mysql_error());
+        echo  '<h4 class="text-success">Dodano nowego użytkownika</h4>';
+    }
     mysql_close($handleSDB);
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>TEB - sklep</title>
-</head>
-<body>
-    <a href="index.html"><-- Wstecz</a> <br><br>
-    <h3>Dodano nowego użytkownika</h3>
 </body>
 </html>
