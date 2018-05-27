@@ -17,7 +17,7 @@ if (isset($_POST['login'])){
     $pass = $_POST['pass'];
 
     //Walidacja
-    $sql = 'SELECT COUNT(`login`) FROM '.$table.' WHERE "login" = "'.$login.'"';
+    $sql = 'SELECT COUNT(`login`) FROM '.$table.' WHERE login = "'.$login.'"';
     $result = mysql_query($sql);
 
     if (mysql_fetch_array($result, MYSQL_NUM)[0] != "0") {

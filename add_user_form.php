@@ -27,7 +27,7 @@ include "html_header.php";
       <input type="password" class="form-control" id="pass" placeholder="pass" name="pass" required>
     </div>
   </div>
-    <div class="mx-auto" style="width: 100px;">
+    <div class="mx-auto" style="width: 100px">
         <button type="submit" class="btn btn-lg  btn-success" >Zapisz</button>
     </div>
 </form>
