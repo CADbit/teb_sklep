@@ -19,9 +19,13 @@ function mysql_fetch_all($res) {
 
     $sql = 'SELECT * FROM '.$table;
     $result = mysql_query($sql);
-    $products = mysql_fetch_all($result);
-    var_dump($products);
+    $products = [];
+    while ($row = mysql_fetch_row($result)) {
+        $products[] = $row;
+    }
+    mysql_close($handleSDB);
 ?>
+        <h3>Lista produktów</h3>
         <table class="table">
             <thead>
             <tr>
@@ -33,14 +37,16 @@ function mysql_fetch_all($res) {
             </thead>
             <tbody>
             <?php
-           for ($i = 0; $i<count($products); $i++){
-                $tr = "tr>
-                <th scope=\"row\">$i</th>
-                <td>$products[1]</td>
-                <td>$products[2]</td>
-                <td><img src=\"$products[3]\" alt=\"Brak zdjęcia\"></td>
-                </tr>";
+            $tr = '';
+            for ($i = 0; $i < count($products); $i++) {
+                $tr .= "<tr>
+                <th scope=\"row\">".($i+1)."</th>
+                <td>".$products[$i][1]."</td>
+                <td>".$products[$i][2]."</td>
+                <td><img src=\"".$products[$i][3]."\" alt=\"Brak zdjęcia\"></td>
+            </tr>";
             }
+            echo($tr);
             ?>
             </tbody>
         </table>
