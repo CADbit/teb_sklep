@@ -13,9 +13,13 @@
 
     $sql = 'SELECT * FROM '.$table;
     $result = mysql_query($sql);
-    $products = mysql_fetch_array($result, MYSQL_ASSOC);
-
+    $products = [];
+    while ($row = mysql_fetch_row($result)) {
+        $products[] = $row;
+    }
+    mysql_close($handleSDB);
 ?>
+        <h3>Lista produktów</h3>
         <table class="table">
             <thead>
             <tr>
@@ -26,21 +30,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
             <?php
-            for ($i = 0; $i <= count($products); $i++) {
-                $tr = "tr>
-                <th scope=\"row\">($i+1)</th>
-                <td>$products[$i]['name']</td>
-                <td>$products[$i]['desc']</td>
-                <td><img src=\"$products[$i]['url']\" alt=\"Brak zdjęcia\"></td>
+            $tr = '';
+            for ($i = 0; $i < count($products); $i++) {
+                $tr .= "<tr>
+                <th scope=\"row\">".($i+1)."</th>
+                <td>".$products[$i][1]."</td>
+                <td>".$products[$i][2]."</td>
+                <td><img src=\"".$products[$i][3]."\" alt=\"Brak zdjęcia\"></td>
             </tr>";
             }
+            echo($tr);
             ?>
             </tbody>
         </table>
