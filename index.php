@@ -1,6 +1,5 @@
 <?php
-
-include "html_header.php";
+    include "html_header.php";
 ?>
 
         <a href="add_user_form.php" class="btn btn-outline-success btn-lg btn-block"> Dodaj nowego użytkownika </a>
