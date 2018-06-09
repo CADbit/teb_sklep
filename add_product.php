@@ -1,33 +1,36 @@
 <?php
-    include "html_header.php";
-?>
-<a href="add_product_form.php"><-- Wstecz</a> <br><br>
-<?php
+session_start();
+
+if ($_SESSION['login'] == false && $_SESSION['admin'] == true) {
+    header ('Location:index.php');
+}
+
+include "html_header.php";
+
 if (isset($_POST['name'])) {
     $config = include "config.php";
     $handleSDB = @mysql_connect ($config['DB_HOST'],
                                  $config['DB_USER'],
                                  $config['DB_PASS']);
     @mysql_select_db($config['DB_NAME'], $handleSDB);
-    $table = 'produkt';
+    $table = 'product';
     $name = $_POST['name'];
     $desc = $_POST['desc'];
     $url = $_POST['url'];
     
     $sql = 'SELECT COUNT(`name`) FROM ' .$table.' WHERE name = "'.$name.'"';
     $result = mysql_query($sql);
-    
-    if (mysql_fetch_array($result,MYSQL_NUM)[0] !="0") {
-       echo '<h4 class="text-warning">W bazie już istnieje ten produkt!</h4> ';
+
+    if (mysql_fetch_array($result,MYSQL_NUM)[0] != 0) {
+       $_SESSION['error'] = 'W bazie już istnieje ten produkt!';
     } else {    
        $sql = 'INSERT INTO '.$table.' values(null,"'.$name.'","'.$desc.'","'.$url.'")';
        $result = mysql_query($sql) or die(mysql_error());
-       echo '<h4 class="text-succes">Dodano nowy produkt</h4>';
+       $_SESSION['msg'] = 'Dodano nowy produkt';
     }
     mysql_close ($handleSDB);
-
 }
-
+    header ('Location:show_products.php');
 ?>
     </body>
 </html>

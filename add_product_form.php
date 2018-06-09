@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if ($_SESSION['login'] == false && $_SESSION['admin'] == true) {
+    header ('Location:index.php');
+}
+
 include "html_header.php";
 ?>
 
