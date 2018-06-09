@@ -1,7 +1,15 @@
 <?php
+session_start();
 include "html_header.php";
 ?>
-
+<div class="row col-12">
+    <?php
+          if (!empty($_SESSION['warning'])){
+          echo "<div class=\"col-12 alert alert-warning role=alert\">".$_SESSION['warning']."</div>";
+          $_SESSION['warning'] = null;
+         }
+         ?>
+</div>
 <form action="login.php" method="POST">
     <div class="form-group row">
         <label for="login" class="col-sm-2 col-form-label">e-mail</label>

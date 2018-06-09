@@ -1,5 +1,6 @@
-
 <?php
+session_start();
+include "html_header.php";
 if (isset($_POST['login'])){
     $config = include "config.php";
     $handleSDB = @mysql_connect($config['DB_HOST'],
@@ -14,9 +15,13 @@ if (isset($_POST['login'])){
     $user = mysql_fetch_array($result, MYSQL_ASSOC);
     if ($user['login'] == $login && $user['pass'] == $pass) {
         mysql_close ($handleSDB);
-        header ('Location:add_product_form.php');
+        $_SESSION['login'] = true;
+        $_SESSION['admin'] = $user['admin'];
+        header ('Location:show_products.php');
     } else {
-        echo '<h4 class="text-warning">Błędny login lub hasło.</h4>';
+        $_SESSION['login'] = false;
+        $_SESSION['warning'] = 'Błędny login lub hasło.';
+        header ('Location:login_form.php');
     }
     mysql_close($handleSDB);
 }
