@@ -10,6 +10,9 @@ if (isset($_GET['add'])) {
     $arr[] = ['product_id' => $_GET['add'], 'qty' => 1];
     $_SESSION ['shop'] = $arr;
 }
+if (isset($_GET['del'])) {  
+    del_product($_GET['del']);
+}
     include "html_header.php";
     
 function mysql_fetch_all($res) {
@@ -18,6 +21,21 @@ function mysql_fetch_all($res) {
    }
    return $return;
 }
+
+function del_product($id) {
+    $config = include "config.php";
+    $handleSDB = @mysql_connect($config['DB_HOST'],
+        $config['DB_USER'],
+        $config['DB_PASS']);
+    @mysql_select_db($config['DB_NAME'], $handleSDB);
+
+    $table = 'product';
+    $sql = 'DELETE FROM '.$table.' WHERE id = '.$id;
+    $result = mysql_query($sql);
+    mysql_close($handleSDB);
+}
+
+
     $config = include "config.php";
     $handleSDB = @mysql_connect($config['DB_HOST'],
         $config['DB_USER'],
@@ -29,7 +47,7 @@ function mysql_fetch_all($res) {
     $sql = 'SELECT * FROM '.$table;
     $result = mysql_query($sql);
     $products = [];
-    while ($row = mysql_fetch_row($result)) {
+        while ($row = mysql_fetch_row($result)) {
         $products[] = $row;
     }
     mysql_close($handleSDB);
@@ -57,11 +75,13 @@ function mysql_fetch_all($res) {
             
             <div class="col-sm-4" style=" text-align: right;">
                 <?php
+                if ($_SESSION ['admin'] == false){
                 if (isset($_SESSION['shop']) && count($_SESSION['shop']) != 0) {
-                    echo "<i class=\"fas fa-cart-arrow-down\">koszykpełny</i>";
+                    echo "<i class=\"fas fa-cart-arrow-down\"></i>";
                     echo "(".count($_SESSION['shop']).")";
                 } else {
-                    echo "<i class=\"fas fa-shopping-cart\">koszykpusty</i>";
+                    echo "<i class=\"fas fa-shopping-cart\"></i>";
+                }
                 }
                 ?>
                 <a href="logout.php" class=" btn btn-danger">Wyloguj</a></div>
@@ -79,6 +99,7 @@ function mysql_fetch_all($res) {
             </thead>
             <tbody>
             <?php
+            if ($_SESSION ['admin'] == false){
             $tr = '';
             for ($i = 0; $i < count($products); $i++) {
                 $tr .= "<tr>
@@ -86,10 +107,23 @@ function mysql_fetch_all($res) {
                 <td>".$products[$i][1]."</td>
                 <td>".$products[$i][2]."</td>
                 <td><img src=\"".$products[$i][3]."\" alt=\"Brak zdjęcia\"></td>
-                <td><a href='?add=".$products[$i][0]."'><i class=\"fas fa-cart-plus\"></i>Koszyk</a></td>
+                <td><a href='?add=".$products[$i][0]."'><i class=\"fas fa-cart-plus\"></i></a></td>
             </tr>";
             }
             echo($tr);
+            } else {
+                $tr = '';
+            for ($i = 0; $i < count($products); $i++) {
+                $tr .= "<tr>
+                <th scope=\"row\">".($i+1)."</th>
+                <td>".$products[$i][1]."</td>
+                <td>".$products[$i][2]."</td>
+                <td><img src=\"".$products[$i][3]."\" alt=\"Brak zdjęcia\"></td>
+                <td><a href='?del=".$products[$i][0]."' class = 'btn btn-danger'>Usuń</a></td>
+            </tr>";
+            }
+            echo($tr);
+            }
             ?>
                 </tbody>
             </table>
